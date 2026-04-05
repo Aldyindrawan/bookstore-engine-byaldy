@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
+
 function Login() {
   const {
     register,
@@ -18,30 +19,37 @@ function Login() {
     await axios
       .post("http://localhost:4001/user/login", userInfo)
       .then((res) => {
-        console.log(res.data);
         if (res.data) {
-          toast.success("Loggedin Successfully");
+          // Durasi toast: 3 detik (3000ms)
+          toast.success("Satu Langkah Lebih Dekat Jadi Arsitek Sistem Handal! ✅", {
+            duration: 3000, 
+          });
+          
           document.getElementById("my_modal_3").close();
+          localStorage.setItem("Users", JSON.stringify(res.data.user));
+
+          // Jeda reload: 3.5 detik biar toast-nya puas tampil dulu
           setTimeout(() => {
             window.location.reload();
-            localStorage.setItem("Users", JSON.stringify(res.data.user));
-          }, 1000);
+          }, 3500);
         }
       })
       .catch((err) => {
         if (err.response) {
-          console.log(err);
-          toast.error("Error: " + err.response.data.message);
-          setTimeout(() => {}, 2000);
+          // Error dikasih 4 detik biar user bisa baca pesannya pelan-pelan
+          toast.error("Gagal Masuk. Tenang, Developer Hebat Juga Pernah Salah Ketik. 💻", {
+            duration: 4000,
+          });
         }
       });
   };
+
   return (
     <div>
       <dialog id="my_modal_3" className="modal">
-        <div className="modal-box">
+        {/* ... sisa code return sama seperti sebelumnya ... */}
+        <div className="modal-box dark:bg-slate-900 dark:text-white border-[1px] dark:border-slate-700">
           <form onSubmit={handleSubmit(onSubmit)} method="dialog">
-            {/* if there is a button in form, it will close the modal */}
             <Link
               to="/"
               className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
@@ -50,56 +58,39 @@ function Login() {
               ✕
             </Link>
 
-            <h3 className="font-bold text-lg">Login</h3>
-            {/* Email */}
+            <h3 className="font-bold text-lg text-pink-500">Masuk ke bookStore</h3>
+            
             <div className="mt-4 space-y-2">
               <span>Email</span>
               <br />
               <input
                 type="email"
-                placeholder="Enter your email"
-                className="w-80 px-3 py-1 border rounded-md outline-none"
+                placeholder="Masukkan email kamu"
+                className="w-80 px-3 py-1 border rounded-md outline-none dark:bg-slate-800 dark:border-slate-600"
                 {...register("email", { required: true })}
               />
               <br />
-              {errors.email && (
-                <span className="text-sm text-red-500">
-                  This field is required
-                </span>
-              )}
+              {errors.email && <span className="text-sm text-red-500">Email-nya jangan kosong ya, Dy!</span>}
             </div>
-            {/* password */}
+
             <div className="mt-4 space-y-2">
               <span>Password</span>
               <br />
               <input
                 type="password"
-                placeholder="Enter your password"
-                className="w-80 px-3 py-1 border rounded-md outline-none"
+                placeholder="Masukkan password"
+                className="w-80 px-3 py-1 border rounded-md outline-none dark:bg-slate-800 dark:border-slate-600"
                 {...register("password", { required: true })}
               />
               <br />
-              {errors.password && (
-                <span className="text-sm text-red-500">
-                  This field is required
-                </span>
-              )}
+              {errors.password && <span className="text-sm text-red-500">Password juga wajib diisi nih.</span>}
             </div>
 
-            {/* Button */}
             <div className="flex justify-around mt-6">
-              <button className="bg-pink-500 text-white rounded-md px-3 py-1 hover:bg-pink-700 duration-200">
+              <button className="bg-pink-500 text-white rounded-md px-4 py-2 hover:bg-pink-700 duration-200 font-medium">
                 Login
               </button>
-              <p>
-                Not registered?{" "}
-                <Link
-                  to="/signup"
-                  className="underline text-blue-500 cursor-pointer"
-                >
-                  Signup
-                </Link>{" "}
-              </p>
+              <p>Belum daftar? <Link to="/signup" className="underline text-blue-500">Signup</Link></p>
             </div>
           </form>
         </div>

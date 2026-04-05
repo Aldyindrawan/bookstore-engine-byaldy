@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from "react";
-
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
-
 import axios from "axios";
-
 import Cards from "./Cards";
+
 function Freebook() {
   const [book, setBook] = useState([]);
+
   useEffect(() => {
     const getBook = async () => {
       try {
         const res = await axios.get("http://localhost:4001/book");
-
+        // Filter berdasarkan kategori "Free" sesuai database kamu
         const data = res.data.filter((data) => data.category === "Free");
         console.log(data);
         setBook(data);
@@ -58,19 +57,23 @@ function Freebook() {
       },
     ],
   };
+
   return (
     <>
-      <div className=" max-w-screen-2xl container mx-auto md:px-20 px-4">
-        <div>
-          <h1 className="font-semibold text-xl pb-2">Free Offered Courses</h1>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            Accusantium veritatis alias pariatur ad dolor repudiandae eligendi
-            corporis nulla non suscipit, iure neque earum?
+      <div className="max-w-screen-2xl container mx-auto md:px-20 px-4 my-10">
+        <div className="space-y-4">
+          <h1 className="font-bold text-2xl pb-2">
+            Amunisi Buat Kamu! 🎁
+          </h1>
+          <p className="text-sm md:text-base leading-relaxed text-gray-600 dark:text-gray-400">
+            Belajar gak harus selalu mahal, yang penting niatnya maksimal. Cek 
+            koleksi buku dan tutorial gratis pilihan kami yang dirancang khusus 
+            buat nambah 'skill' kamu. 
+            Gas terus pelajari logic-nya!
           </p>
         </div>
 
-        <div>
+        <div className="mt-12">
           <Slider {...settings}>
             {book.map((item) => (
               <Cards item={item} key={item.id} />
@@ -81,4 +84,5 @@ function Freebook() {
     </>
   );
 }
+
 export default Freebook;
